@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.web.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<BorderPane prefHeight="461.0" prefWidth="699.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="src.controler.NoteBookController">
+    <center>
+        <TextArea fx:id="ta" prefHeight="434.0" prefWidth="658.0" BorderPane.alignment="CENTER" />
+    </center>
+    <top>
+        <MenuBar BorderPane.alignment="CENTER">
+            <menus>
+                <Menu mnemonicParsing="false" text="文件">
+                    <items>
+                        <MenuItem fx:id="NewMenu" mnemonicParsing="false" onAction="#onNewMenu" text="新建" />
+                        <MenuItem fx:id="OpenMenu" mnemonicParsing="false" onAction="#onOpenMenu" text="打开" />
+                        <MenuItem fx:id="SaveMenu" mnemonicParsing="false" onAction="#onSaveMenu" text="保存" />
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="编辑">
+                    <items>
+                        <MenuItem fx:id="FindMenu" mnemonicParsing="false" onAction="#onFindMenu" text="查找" />
+                        <MenuItem fx:id="ReplaceMenu" mnemonicParsing="false" onAction="#onReplaceMenu" text="替换" />
+                        <MenuItem fx:id="Undo" mnemonicParsing="false" onAction="#onUndoMenu" text="撤销" />
+                        <MenuItem fx:id="Redo" mnemonicParsing="false" onAction="#onRedoMenu" text="重做" />
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="格式">
+                    <items>
+                        <CheckMenuItem fx:id="WrapMenu" mnemonicParsing="false" onAction="#onWrapMenu" text="自动换行" />
+                        <MenuItem fx:id="TypefaceMenu" mnemonicParsing="false" onAction="#onTypefaceMenu" text="字体..." />
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="查看">
+                    <items>
+                        <CheckMenuItem fx:id="StateMenu" mnemonicParsing="false" onAction="#onStateMenu" text="状态栏" />
+                    </items>
+                </Menu>
+            </menus>
+        </MenuBar>
+    </top>
+    <bottom>
+        <Label fx:id="label" text="状态栏" BorderPane.alignment="CENTER" />
+    </bottom>
+</BorderPane>
+

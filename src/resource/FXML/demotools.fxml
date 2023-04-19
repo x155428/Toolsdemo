@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane fx:id="root_pane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="src.controler.toolscontroler">
+   <children>
+   
+   <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+      <children>
+         <VBox prefHeight="400.0" prefWidth="80.0" style="-fx-background-color: #303133;">
+            <children>
+               <Button fx:id="cut_func_btn" mnemonicParsing="false" prefHeight="23.0" prefWidth="80.0" text="截图扫描" />
+               <Button fx:id="note_func_btn" maxWidth="80.0" mnemonicParsing="false" text="便签" />
+               <Button fx:id="handel_func_btn" maxWidth="80.0" mnemonicParsing="false" prefHeight="23.0" text="字符处理" />
+               <Button fx:id="FileCompare_func_btn" maxWidth="80.0" mnemonicParsing="false" text="文本对比" />
+               <Button fx:id="aboutip_func_btn" maxWidth="80.0" mnemonicParsing="false" text="IP计算" />
+               <Button maxWidth="80.0" mnemonicParsing="false" text="待扩展" />
+            </children>
+         </VBox>
+         <BorderPane fx:id="showrootpane" prefHeight="400.0" prefWidth="520.0">
+            <center>
+               <TabPane prefHeight="370.0" prefWidth="520.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+                 <tabs>
+                   <Tab text="Untitled Tab 1">
+                     <content>
+                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="300.0" prefWidth="200.0" />
+                     </content>
+                   </Tab>
+                 </tabs>
+               </TabPane>
+            </center>
+            <bottom>
+               <ToolBar prefHeight="30.0" prefWidth="520.0" BorderPane.alignment="CENTER">
+                 <items>
+                   <Button fx:id="cunscreen_btn" mnemonicParsing="false" onAction="#cutscreen" text="截屏" />
+                     <Button fx:id="scan_btn" mnemonicParsing="false" text="扫描" />
+                     <Button fx:id="copy_btn" mnemonicParsing="false" text="复制" />
+                     <Button fx:id="import_btn" mnemonicParsing="false" text="导入" />
+                     <Button fx:id="edit_btn" mnemonicParsing="false" text="编辑" />
+                     <Button fx:id="delete_btn" mnemonicParsing="false" text="删除" />
+                     <Button fx:id="clearall_btn" mnemonicParsing="false" text="清空" />
+                     <Button fx:id="savepicture_btn" mnemonicParsing="false" text="保存" />
+                 </items>
+               </ToolBar>
+            </bottom>
+         </BorderPane>
+      </children>
+   </HBox>
+   </children>
+</AnchorPane>
