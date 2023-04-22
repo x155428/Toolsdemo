@@ -1,6 +1,7 @@
 package src.test;
 
 //import cv2;
+
 import com.google.zxing.BinaryBitmap;
 import com.google.zxing.MultiFormatReader;
 import com.google.zxing.Result;
@@ -9,7 +10,7 @@ import com.google.zxing.common.HybridBinarizer;
 import javafx.application.Application;
 import javafx.collections.ListChangeListener;
 import javafx.embed.swing.SwingFXUtils;
-import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
@@ -28,9 +29,10 @@ import javafx.scene.paint.Paint;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
 import src.container.ImgContainer;
+import src.utils.createAlter;
 import src.utils.showScanResult;
-
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -38,8 +40,6 @@ import java.awt.image.BufferedImage;
 import java.awt.image.MultiResolutionImage;
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URL;
 import java.util.Optional;
 
 public class MenuTest extends Application {
@@ -415,20 +415,28 @@ public class MenuTest extends Application {
                         FileChooser.ExtensionFilter extfilter=new FileChooser.ExtensionFilter("图片（*.jpg)","*.png","*.gif");
                         filechoose.getExtensionFilters().add(extfilter);
                         File imgfile=filechoose.showSaveDialog(primary);
-                        String filepath=imgfile.getAbsolutePath();
-                        //判断文件保存类型，文件后缀
-                        // if(filepath)
-                        try {
-                            ImageIO.write(selectTabimg,"png",imgfile);
-                            Alert alert=new Alert(Alert.AlertType.CONFIRMATION);
-                            alert.setTitle("保存提示！");
-                            alert.setHeaderText("");
-                            alert.getButtonTypes().remove(ButtonType.CANCEL);
-                            alert.setContentText("保存成功，文件保存在："+filepath);
-                            alert.showAndWait();
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
+                        if(imgfile!=null){
+                            String filepath=imgfile.getAbsolutePath();
+                            //判断文件保存类型，文件后缀
+                            // if(filepath)
+                            try {
+                                ImageIO.write(selectTabimg,"png",imgfile);
+                                Alert alert=new Alert(Alert.AlertType.CONFIRMATION);
+                                alert.setTitle("保存提示！");
+                                alert.setHeaderText("");
+                                alert.getButtonTypes().remove(ButtonType.CANCEL);
+                                alert.setContentText("保存成功，文件保存在："+filepath);
+                                alert.showAndWait();
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }else {
+                          Alert  alert= createAlter.createalter("提示！","");
+                          alert.getButtonTypes().remove(ButtonType.CANCEL);
+                          alert.setContentText("文件未保存！");
+                          alert.showAndWait();
                         }
+
                     }
                 });
 
@@ -456,9 +464,17 @@ public class MenuTest extends Application {
                 Scene notebookScene=new Scene(root,600,400);
                 notepadStage.setScene(notebookScene);
                 notepadStage.show();
+                notepadStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+                    @Override
+                    public void handle(WindowEvent windowEvent) {
+                        primary.setIconified(false);
+                        btn2.setDisable(false);
+                    }
+                });
                 notebookScene.setOnKeyPressed(event -> {
                     if(event.getCode()== KeyCode.ESCAPE){
                         notepadStage.close();
+                        btn2.setDisable(false);
                         primary.setIconified(false);
                     }
                 });
