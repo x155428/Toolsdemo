@@ -1,9 +1,8 @@
 package src.test;
 
-//import cv2;
-
 import com.google.zxing.BinaryBitmap;
 import com.google.zxing.MultiFormatReader;
+import com.google.zxing.NotFoundException;
 import com.google.zxing.Result;
 import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
 import com.google.zxing.common.HybridBinarizer;
@@ -32,6 +31,7 @@ import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 import src.container.ImgContainer;
 import src.utils.createAlter;
+import src.utils.imgRepair;
 import src.utils.showScanResult;
 
 import javax.imageio.ImageIO;
@@ -234,14 +234,13 @@ public class MenuTest extends Application {
                                 BinaryBitmap binaryBitmap = new BinaryBitmap(new HybridBinarizer(new BufferedImageLuminanceSource(img)));
                                 // 解析二维码
                                 Result result = reader.decode(binaryBitmap);
-                                // 输出二维码内容
+                                // 输出二维码内容到剪切板
                                 Clipboard clipboard = Clipboard.getSystemClipboard();
                                 ClipboardContent content = new ClipboardContent();
                                 content.putString(result.getText());
                                 clipboard.setContent(content);
                                 System.out.println(result.getText());
                                 //弹窗提示
-                                //showScanResult showresult=new showScanResult(result.getText());
                                 new showScanResult(result.getText());
 
                             }else{
@@ -254,8 +253,30 @@ public class MenuTest extends Application {
                             System.out.println("解码失败，开始二维码修复...");
                             String ImgName=ChoseImgPane.getSelectionModel().getSelectedItem().getText();
                             BufferedImage img=imgmap.imgcontainer.get(ImgName);
-                            int imgwidth=img.getWidth();
-                            int imgheight=img.getHeight();
+                            BufferedImage  newimg=new imgRepair().sharpen(img);
+                            File test=new File("D://222.png");
+                            try {
+                                ImageIO.write(newimg,"png",test);
+                            } catch (IOException ex) {
+                                throw new RuntimeException(ex);
+                            }
+                            System.out.println("1111");
+                            // 创建二维码读取器
+                            MultiFormatReader reader = new MultiFormatReader();
+                            // 将图片转换为二进制位图
+                            BinaryBitmap binaryBitmap = new BinaryBitmap(new HybridBinarizer(new BufferedImageLuminanceSource(newimg)));
+                            // 解析二维码
+
+                            try {
+                                Result result = reader.decode(binaryBitmap);
+                                System.out.println(result.getText());
+                                new showScanResult(result.getText());
+                            } catch (NotFoundException ex) {
+                                throw new RuntimeException(ex);
+                            }
+
+                            //int imgwidth=img.getWidth();
+                            //int imgheight=img.getHeight();
 /*
                             Mat qrCodeMat = new Mat(qrCodeHeight, qrCodeWidth, CvType.CV_8UC3);
                             qrCodeMat.depth = CvType.CV_8U;
@@ -604,7 +625,6 @@ public class MenuTest extends Application {
         }else{
             buffimg=(BufferedImage) resultimgs.get(0);
         }
-        //BufferedImage buffimg=robot.createScreenCapture(rec);
         //生成图片名字，加入图片容器
         index++;
         String tmpimgname="图片"+index;
