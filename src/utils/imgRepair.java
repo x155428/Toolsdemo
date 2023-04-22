@@ -12,7 +12,7 @@ import java.io.IOException;
 //放大图片，二值化，降噪
 public class imgRepair {
 
-    public static int YZ = 115;//115
+    public static int YZ = 115;//rgb阈值115
 
     //放大图片
     public static void twobig(String input,String output) throws IOException {

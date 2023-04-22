@@ -632,10 +632,8 @@ public class MenuTest extends Application {
         imgmap.imgIn(tmpimgname,buffimg);
         imgmap.showmapnum();
         WritableImage wi= SwingFXUtils.toFXImage(buffimg,null);
-
-        File imgfile=new File("d://1111.png");
-        ImageIO.write(buffimg,"png",imgfile);
-
+        //File imgfile=new File("d://1111.png");
+        //ImageIO.write(buffimg,"png",imgfile);
         //ÐÂ½¨tabÏÔÊ¾Í¼Æ¬
         Tab tmptab=new Tab(imgmap.getmapkey(index));
         System.out.println(tmptab.getText());
