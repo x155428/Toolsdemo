@@ -1,9 +1,5 @@
 package src.controler;
 
-import java.io.File;
-import java.io.IOException;
-
-import src.utils.FileTools;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -12,14 +8,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
+import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckMenuItem;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
@@ -27,6 +17,10 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import src.utils.FileTools;
+
+import java.io.File;
+import java.io.IOException;
 
 public class NoteBookController {
 
@@ -105,7 +99,7 @@ public class NoteBookController {
         });
     }
 
-    // 修改前保
+    // 修改前保存
     void saveadvance() {
         if (result != null && ta.getLength() > 0) {
 
@@ -322,7 +316,7 @@ public class NoteBookController {
     @FXML
     void onTypefaceMenu(ActionEvent event) throws IOException {
         Stage stage = new Stage();
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("Typeface.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/src/resource/FXML/Typeface.fxml"));
         Parent parent = loader.load();
         Scene scene = new Scene(parent);
         stage.setScene(scene);
