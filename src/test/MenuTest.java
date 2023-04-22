@@ -275,47 +275,6 @@ public class MenuTest extends Application {
                                 throw new RuntimeException(ex);
                             }
 
-                            //int imgwidth=img.getWidth();
-                            //int imgheight=img.getHeight();
-/*
-                            Mat qrCodeMat = new Mat(qrCodeHeight, qrCodeWidth, CvType.CV_8UC3);
-                            qrCodeMat.depth = CvType.CV_8U;
-                            qrCodeMat.setTo(0);
-
-                            // QRCode.create 函数的实现
-                            Mat qrCodeMatCopy = new Mat(qrCodeHeight, qrCodeWidth, CvType.CV_8UC3);
-                            qrCodeMat.copyTo(qrCodeMatCopy);
-                            QRCode qrCode = new QRCode(qrCodeMatCopy);
-
-                            // 修复 QRCode 图像
-                            Mat defectsMat = new Mat();
-                            qrCode.getDefects(defectsMat);
-                            for (int i = 0; i < defectsMat.rows(); i++) {
-                                for (int j = 0; j < defectsMat.cols(); j++) {
-                                    if (defectsMat.at<uchar>(i, j) > 0) {
-                                        qrCodeMat.at<uchar>(i, j) = 255;
-                                    }
-                                }
-                            }
-
- */
-
-                            //ConvolutionFilter filter = new ConvolutionFilter(ConvolutionFilter.Type.KERNEL8, ConvolutionFilter.Mode.AVERAGE);
-                           // Enhancer enhancer = new Enhancer();
-                           // enhancer.setStrength(0.8f);
-                            //image = enhancer.enhance(image, filter);
-                            /*image = QRCodeUtils.repairQRCode(image);
-                            LuminanceSource source = new RGBLuminanceSource(image);
-                            BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
-                            Reader reader = new MultiFormatReader();
-                            try {
-                                Result result = reader.decode(bitmap);
-                                System.out.println("修复后二维码内容：" + result.getText());
-                            } catch (NotFoundException e1) {
-                                e1.printStackTrace();
-                            }*/
-
-
 
                         }
                     }else {
