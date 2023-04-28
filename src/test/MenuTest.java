@@ -9,6 +9,7 @@ import com.google.zxing.common.HybridBinarizer;
 import javafx.application.Application;
 import javafx.collections.ListChangeListener;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
@@ -16,6 +17,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
@@ -30,7 +32,9 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 import src.container.ImgContainer;
+import src.controler.Stringhandle;
 import src.utils.createAlter;
+import src.utils.dealString;
 import src.utils.imgRepair;
 import src.utils.showScanResult;
 
@@ -130,6 +134,17 @@ public class MenuTest extends Application {
                 setContent(3);
             } catch (IOException e) {
                 throw new RuntimeException(e);
+            }
+        });
+
+        btn4.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                try {
+                    setContent(4);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 
@@ -250,32 +265,46 @@ public class MenuTest extends Application {
                         } catch (Exception e) {
                             e.printStackTrace();
                             // 当解码失败时，将图片清晰化处理，修复二维码再扫描
-                            System.out.println("解码失败，开始二维码修复...");
+                            System.out.println("解码失败，尝试修复二维码...");
+                            //获取当前选中图片
                             String ImgName=ChoseImgPane.getSelectionModel().getSelectedItem().getText();
-                            BufferedImage img=imgmap.imgcontainer.get(ImgName);
-                            BufferedImage  newimg=new imgRepair().sharpen(img);
-                            File test=new File("D://222.png");
+                            BufferedImage oldimg=imgmap.imgcontainer.get(ImgName);
+                            //第一种修复--放大，锐化
+                            BufferedImage  newimg=null;
                             try {
-                                ImageIO.write(newimg,"png",test);
+                                if(oldimg.getWidth()<100|oldimg.getHeight()<100){
+                                    newimg=imgRepair.changeBig(oldimg);
+                                }
+
                             } catch (IOException ex) {
                                 throw new RuntimeException(ex);
                             }
-                            System.out.println("1111");
+                            try {
+                                newimg=imgRepair.binarization(newimg);
+                            } catch (IOException ex) {
+                                throw new RuntimeException(ex);
+                            }
+                            try {
+                                newimg= imgRepair.opening(newimg);
+                                File outputFile = new File("d:/1113.png");
+                                ImageIO.write(newimg, "jpg", outputFile);
+                            } catch (IOException ex) {
+                                throw new RuntimeException(ex);
+                            }
+
                             // 创建二维码读取器
                             MultiFormatReader reader = new MultiFormatReader();
                             // 将图片转换为二进制位图
                             BinaryBitmap binaryBitmap = new BinaryBitmap(new HybridBinarizer(new BufferedImageLuminanceSource(newimg)));
                             // 解析二维码
-
                             try {
                                 Result result = reader.decode(binaryBitmap);
                                 System.out.println(result.getText());
                                 new showScanResult(result.getText());
                             } catch (NotFoundException ex) {
-                                throw new RuntimeException(ex);
+
+                            throw new RuntimeException(ex);
                             }
-
-
                         }
                     }else {
                         Alert alert=new Alert(Alert.AlertType.CONFIRMATION);
@@ -460,14 +489,92 @@ public class MenuTest extends Application {
                 });
                 break;
             case 3:
-                Label label3 = new Label("3");
-                label3.setStyle("-fx-font-size: 24px;");
-                content.getChildren().add(label3);
+                System.out.println("字符处理");
+                btn2.setDisable(false);
+                btn1.setDisable(false);
+                btn3.setDisable(true);
+                btn4.setDisable(false);
+                btn5.setDisable(false);
+                btn6.setDisable(false);
+                content.getChildren().clear();
+                imgmap.imgcontainer.clear();
+                index=0;
+                //日志输入界面
+                TextArea originaldataview=new TextArea();
+                originaldataview.setWrapText(true);
+                content.setCenter(originaldataview);
+                Button dealbth=new Button("确定");
+                ToolBar handlestrtoolbar=new ToolBar(dealbth);
+                content.setBottom(handlestrtoolbar);
+                originaldataview.setPromptText("输入日志信息后单击确定......");
+                //确定按钮点击事件
+                dealbth.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent actionEvent) {
+                        primary.setIconified(true);
+                        //新建新场景,加载展示窗口
+                        Stage stringdeal = new Stage();
+                        Parent root = null;
+                        FXMLLoader loader;
+                        try {
+                            loader = new FXMLLoader(getClass().getResource("/src/resource/FXML/stringhandle.fxml"));
+                            root = loader.load();
+
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                        Scene stringhandleresult = new Scene(root, 800, 650);
+
+                        stringdeal.setScene(stringhandleresult);
+                        stringdeal.show();
+                        String originaldata = originaldataview.getText();
+                        Stringhandle an = loader.getController();
+                        //获取originaltextarea，放入数据
+                        TextArea originaldataview = (TextArea) root.lookup("#originaldataview");
+                        originaldataview.setWrapText(true);
+                        dealString deal=new dealString(originaldata);
+                        originaldataview.appendText("\n"+originaldata);
+
+
+                        //获取payloadtextarea放入数据
+                        TextArea payloaddataview = (TextArea) root.lookup("#payloaddataview");
+                        payloaddataview.setWrapText(true);
+                        payloaddataview.appendText("\n"+deal.resultmap.get("攻击载荷："));
+
+                        //获取basetextarea放入数据
+                        TextArea basetataview = (TextArea) root.lookup("#basetataview");
+                        basetataview.setWrapText(true);
+                        for (String key : deal.resultmap.keySet()) {
+                            String value = deal.resultmap.get(key);
+                            basetataview.appendText("\n"+key+"："+value);
+                        }
+
+
+
+
+
+
+                        //监听窗口关闭，显示主界面。
+                        stringdeal.setOnCloseRequest(new EventHandler<WindowEvent>() {
+                            @Override
+                            public void handle(WindowEvent windowEvent) {
+                                primary.setIconified(false);
+                            }
+                        });
+                        stringhandleresult.setOnKeyPressed(event -> {
+                            if (event.getCode() == KeyCode.ESCAPE) {
+                                stringdeal.close();
+                                primary.setIconified(false);
+                            }
+                        });
+                    }
+                });
                 break;
             case 4:
-                Label label4 = new Label("4");
-                label4.setStyle("-fx-font-size: 24px;");
-                content.getChildren().add(label4);
+
+
+
+
                 break;
             case 5:
                 Label label5 = new Label("5");
@@ -612,6 +719,11 @@ public class MenuTest extends Application {
 
 
     public static void main(String[] args) {
+        String modulePath = "D:/idea/openjfx-20_windows-x64_bin-sdk/javafx-sdk-20/lib";
+        String addModules = "javafx.controls,javafx.fxml";
+        System.setProperty("java.class.path", modulePath);
+        System.setProperty("java.module.path", modulePath);
+        System.setProperty("java.addModules", addModules);
         launch(args);
     }
 }

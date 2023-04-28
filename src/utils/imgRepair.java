@@ -4,24 +4,21 @@ package src.utils;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.awt.image.ConvolveOp;
-import java.awt.image.Kernel;
 import java.io.File;
 import java.io.IOException;
 
 //放大图片，二值化，降噪
 public class imgRepair {
 
-    public static int YZ = 115;//rgb阈值115
+    public static int YZ = 120;//rgb阈值115
 
     //放大图片
-    public static void twobig(String input,String output) throws IOException {
-        File inputFile = new File(input);
-        BufferedImage inputImage = ImageIO.read(inputFile);
+    public static BufferedImage changeBig(BufferedImage input) throws IOException {
+        BufferedImage inputImage=input;
 
         // 计算新的宽度和高度
-        int newWidth = inputImage.getWidth() * 4;
-        int newHeight = inputImage.getHeight() * 4;
+        int newWidth = inputImage.getWidth() * 5;
+        int newHeight = inputImage.getHeight() * 5;
 
         // 创建缓存图片
         BufferedImage outputImage = new BufferedImage(newWidth, newHeight, inputImage.getType());
@@ -30,33 +27,56 @@ public class imgRepair {
         Graphics2D g2d = outputImage.createGraphics();
         g2d.drawImage(inputImage, 0, 0, newWidth, newHeight, null);
         g2d.dispose();
+        return outputImage;
 
         // 保存缩放后的图片
-        File outputFile = new File(output);
-        ImageIO.write(outputImage, "jpg", outputFile);
+        //File outputFile = new File(output);
+        //ImageIO.write(outputImage, "jpg", outputFile);
     }
-
+/*
     //锐化图片
-    public BufferedImage sharpen(BufferedImage image) {
+    public static BufferedImage sharpen(BufferedImage image) {
         // define sharpening kernel
-        float[] sharpenKernel = {
-                -0.125f, -0.125f, -0.125f,
-                -0.125f,  1.25f, -0.125f,
-                -0.125f, -0.125f, -0.125f
-        };
+        int width=image.getWidth();
+        int height=image.getHeight();
 
-        // create convolution operator with sharpening kernel
-        Kernel kernel = new Kernel(3, 3, sharpenKernel);
-        ConvolveOp op = new ConvolveOp(kernel);
+        // 创建卷积核
+        int[][] kernelX = {{-1, 0, 1}, {-2, 0, 2}, {-1, 0, 1}};
+        int[][] kernelY = {{-1, -2, -1}, {0, 0, 0}, {1, 2, 1}};
 
-        // apply the operator on the image and return the result
-        return op.filter(image, null);
+        // 创建输出图片
+        BufferedImage output = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        // 对每个像素进行卷积运算
+        for (int x = 1; x < width - 1; x++) {
+            for (int y = 1; y < height - 1; y++) {
+                // 计算卷积值
+                int valueX = 0;
+                int valueY = 0;
+                for (int i = -1; i <= 1; i++) {
+                    for (int j = -1; j <= 1; j++) {
+                        int pixel = image.getRGB(x + i, y + j);
+                        int gray = (int) (0.299 * ((pixel >> 16) & 0xff) + 0.587 * ((pixel >> 8) & 0xff) + 0.114 * (pixel & 0xff));
+                        valueX += gray * kernelX[i + 1][j + 1];
+                        valueY += gray * kernelY[i + 1][j + 1];
+                    }
+                }
+                // 计算卷积结果
+                int value = (int) Math.sqrt(valueX * valueX + valueY * valueY);
+                // 对结果进行截断
+                value = Math.min(255, Math.max(0, value));
+                // 将结果存入输出图片
+                output.setRGB(x, y, (value << 16) | (value << 8) | value);
+            }
+        }
+        return output;
+
     }
+
+ */
 
     //图片二值化
-    public static void binarization(String filePath, String fileOutputPath) throws IOException {
-        File file = new File(filePath);
-        BufferedImage bi = ImageIO.read(file);
+    public static BufferedImage binarization(BufferedImage inputimg) throws IOException {
+        BufferedImage bi =inputimg;
         // 获取当前图片的高,宽,ARGB
         int h = bi.getHeight();
         int w = bi.getWidth();
@@ -86,7 +106,7 @@ public class imgRepair {
             }
 
         }
-        ImageIO.write(bufferedImage, "jpg", new File(fileOutputPath));
+        return bufferedImage;
     }
 
     private static int getImageGray(int rgb) {
@@ -116,15 +136,11 @@ public class imgRepair {
         return rs / 9;
     }
 
-    /**
-     * 二值化后的图像的开运算：先腐蚀再膨胀（用于去除图像的小黑点）
-     *
-     *  filePath 要处理的图片路径
-     *  fileOutputPath 处理后的图片输出路径
+    /*
+      二值化后的图像的开运算：先腐蚀再膨胀（用于去除图像的小黑点）
      */
-    public static void opening(String filePath, String fileOutputPath) throws IOException {
-        File file = new File(filePath);
-        BufferedImage bi = ImageIO.read(file);
+    public static BufferedImage opening(BufferedImage inputimg) throws IOException {
+        BufferedImage bi =inputimg;
         // 获取当前图片的高,宽,ARGB
         int h = bi.getHeight();
         int w = bi.getWidth();
@@ -196,8 +212,14 @@ public class imgRepair {
                 }
             }
         }
+        return inputimg;
+    }
 
-        ImageIO.write(bufferedImage, "jpg", new File(fileOutputPath));
+    public static void main(String[] args) throws IOException {
+        BufferedImage image1 = ImageIO.read(new File("d:/test.png"));
+        BufferedImage image2=changeBig(image1);
+        BufferedImage image3=binarization(image2);
+        ImageIO.write(image3,"png", new File("d:/erzhihua.png"));
     }
 
 

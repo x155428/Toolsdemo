@@ -6,9 +6,24 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="src.resource.FXML.Stringhandle"
-            prefHeight="400.0" prefWidth="600.0">
+<AnchorPane prefHeight="650.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="src.controler.Stringhandle">
 
+    <children>
+        <SplitPane dividerPositions="0.5" prefHeight="650.0" prefWidth="800.0">
+            <items>
+                <VBox prefHeight="648.0" prefWidth="435.0">
+                    <children>
+                        <TextArea fx:id="basetataview" prefHeight="392.0" prefWidth="396.0" text="基本信息：&#10;" />
+                        <Separator prefHeight="17.0" prefWidth="396.0" />
+                        <TextArea fx:id="payloaddataview" prefHeight="243.0" prefWidth="396.0" text="payload" />
+                    </children>
+                </VBox>
+                <VBox prefHeight="321.0" prefWidth="177.0">
+                    <children>
+                        <TextArea fx:id="originaldataview" prefHeight="648.0" prefWidth="396.0" text="原数据" />
+                    </children>
+                </VBox>
+            </items>
+        </SplitPane>
+    </children>
 </AnchorPane>

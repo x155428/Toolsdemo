@@ -2,9 +2,15 @@
   <library name="lib">
     <CLASSES>
       <root url="file://$PROJECT_DIR$/../../openjfx-20_windows-x64_bin-sdk/javafx-sdk-20/lib" />
+      <root url="jar://$PROJECT_DIR$/../../../opencv/opencv/build/java/opencv-470.jar!/" />
     </CLASSES>
-    <JAVADOC />
-    <SOURCES />
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/Downloads/javacv-1.5.8-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/../../../opencv/opencv/build/java/opencv-470.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../../opencv/opencv/build/java/opencv-470.jar!/" />
+    </SOURCES>
     <jarDirectory url="file://$PROJECT_DIR$/../../openjfx-20_windows-x64_bin-sdk/javafx-sdk-20/lib" recursive="false" />
   </library>
 </component>
