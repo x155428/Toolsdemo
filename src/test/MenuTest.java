@@ -6,6 +6,8 @@ import com.google.zxing.NotFoundException;
 import com.google.zxing.Result;
 import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
 import com.google.zxing.common.HybridBinarizer;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.collections.ListChangeListener;
 import javafx.embed.swing.SwingFXUtils;
@@ -31,6 +33,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
+import javafx.util.Duration;
 import src.container.ImgContainer;
 import src.controler.Stringhandle;
 import src.utils.createAlter;
@@ -272,8 +275,10 @@ public class MenuTest extends Application {
                             //第一种修复--放大，锐化
                             BufferedImage  newimg=null;
                             try {
-                                if(oldimg.getWidth()<100|oldimg.getHeight()<100){
+                                if(oldimg.getWidth()<80|oldimg.getHeight()<80){
                                     newimg=imgRepair.changeBig(oldimg);
+                                }else{
+                                    newimg=oldimg;
                                 }
 
                             } catch (IOException ex) {
@@ -286,8 +291,6 @@ public class MenuTest extends Application {
                             }
                             try {
                                 newimg= imgRepair.opening(newimg);
-                                File outputFile = new File("d:/1113.png");
-                                ImageIO.write(newimg, "jpg", outputFile);
                             } catch (IOException ex) {
                                 throw new RuntimeException(ex);
                             }
@@ -300,10 +303,17 @@ public class MenuTest extends Application {
                             try {
                                 Result result = reader.decode(binaryBitmap);
                                 System.out.println(result.getText());
+                                Clipboard clipboard = Clipboard.getSystemClipboard();
+                                ClipboardContent content = new ClipboardContent();
+                                content.putString(result.getText());
+                                clipboard.setContent(content);
                                 new showScanResult(result.getText());
                             } catch (NotFoundException ex) {
-
-                            throw new RuntimeException(ex);
+                               Alert failAlter= createAlter.createalter("提示！","");
+                                failAlter.setContentText("扫描失败，调整截图大小和清晰度重新扫描！");
+                                Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(2), event -> failAlter.setResult(ButtonType.CLOSE)));
+                                timeline.play();
+                                failAlter.showAndWait();
                             }
                         }
                     }else {
@@ -514,6 +524,7 @@ public class MenuTest extends Application {
                         primary.setIconified(true);
                         //新建新场景,加载展示窗口
                         Stage stringdeal = new Stage();
+                        stringdeal.setResizable(false);
                         Parent root = null;
                         FXMLLoader loader;
                         try {
@@ -544,9 +555,15 @@ public class MenuTest extends Application {
                         //获取basetextarea放入数据
                         TextArea basetataview = (TextArea) root.lookup("#basetataview");
                         basetataview.setWrapText(true);
+                        System.out.println(deal.head);
+                        basetataview.appendText(deal.head);
                         for (String key : deal.resultmap.keySet()) {
                             String value = deal.resultmap.get(key);
-                            basetataview.appendText("\n"+key+"："+value);
+                            //过滤掉空字段
+                            if(!match(value)){
+                                basetataview.appendText("\n"+key+value);
+                            }
+
                         }
 
 
@@ -593,6 +610,17 @@ public class MenuTest extends Application {
     private void addTab() {
 
     }
+
+    //字符处理功能中去除基本数据中的空字段
+    public boolean match(String str) {
+        String pattern = ".*\\(\\d{4}\\)=$";
+        String pattern1="^.*\\(\\d{4}\\)=--$";
+        if(str.matches(pattern)|str.matches(pattern1)){
+            return true;
+        }
+        return false;
+    }
+
 
     private void show() {
         //点击按钮，主窗口缩小
