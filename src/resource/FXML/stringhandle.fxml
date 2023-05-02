@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
 <AnchorPane prefHeight="650.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="src.controler.Stringhandle">
 
     <children>
@@ -13,9 +10,9 @@
             <items>
                 <VBox prefHeight="648.0" prefWidth="435.0">
                     <children>
-                        <TextArea fx:id="basetataview" prefHeight="392.0" prefWidth="396.0" text="基本信息：&#10;" />
+                        <TextArea fx:id="basetataview" prefHeight="284.0" prefWidth="396.0" text="基本信息：&#10;" />
                         <Separator prefHeight="17.0" prefWidth="396.0" />
-                        <TextArea fx:id="payloaddataview" prefHeight="243.0" prefWidth="396.0" text="payload：" />
+                        <TextArea fx:id="payloaddataview" prefHeight="350.0" prefWidth="396.0" text="payload：" />
                     </children>
                 </VBox>
                 <VBox prefHeight="321.0" prefWidth="177.0">

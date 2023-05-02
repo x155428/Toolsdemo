@@ -32,10 +32,8 @@ import javafx.scene.paint.Paint;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 import src.container.ImgContainer;
-import src.controler.Stringhandle;
 import src.utils.createAlter;
 import src.utils.dealString;
 import src.utils.imgRepair;
@@ -140,14 +138,11 @@ public class MenuTest extends Application {
             }
         });
 
-        btn4.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                try {
-                    setContent(4);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
+        btn4.setOnAction(actionEvent -> {
+            try {
+                setContent(4);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
         });
 
@@ -273,7 +268,7 @@ public class MenuTest extends Application {
                             String ImgName=ChoseImgPane.getSelectionModel().getSelectedItem().getText();
                             BufferedImage oldimg=imgmap.imgcontainer.get(ImgName);
                             //第一种修复--放大，锐化
-                            BufferedImage  newimg=null;
+                            BufferedImage  newimg;
                             try {
                                 if(oldimg.getWidth()<80|oldimg.getHeight()<80){
                                     newimg=imgRepair.changeBig(oldimg);
@@ -483,12 +478,9 @@ public class MenuTest extends Application {
                 Scene notebookScene=new Scene(root,600,400);
                 notepadStage.setScene(notebookScene);
                 notepadStage.show();
-                notepadStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-                    @Override
-                    public void handle(WindowEvent windowEvent) {
-                        primary.setIconified(false);
-                        btn2.setDisable(false);
-                    }
+                notepadStage.setOnCloseRequest(windowEvent -> {
+                    primary.setIconified(false);
+                    btn2.setDisable(false);
                 });
                 notebookScene.setOnKeyPressed(event -> {
                     if(event.getCode()== KeyCode.ESCAPE){
@@ -518,7 +510,7 @@ public class MenuTest extends Application {
                 content.setBottom(handlestrtoolbar);
                 originaldataview.setPromptText("输入日志信息后单击确定......");
                 //确定按钮点击事件
-                dealbth.setOnAction(new EventHandler<ActionEvent>() {
+                dealbth.setOnAction(new EventHandler<>() {
                     @Override
                     public void handle(ActionEvent actionEvent) {
                         primary.setIconified(true);
@@ -539,45 +531,39 @@ public class MenuTest extends Application {
                         stringdeal.setScene(stringhandleresult);
                         stringdeal.show();
                         String originaldata = originaldataview.getText();
-                        Stringhandle an = loader.getController();
+                        //Stringhandle an = loader.getController();
                         //获取originaltextarea，放入数据
                         TextArea originaldataview = (TextArea) root.lookup("#originaldataview");
                         originaldataview.setWrapText(true);
-                        dealString deal=new dealString(originaldata);
-                        originaldataview.appendText("\n"+originaldata);
+                        dealString deal = new dealString(originaldata);
+                        originaldataview.appendText("\n" + originaldata);
 
 
                         //获取payloadtextarea放入数据
                         TextArea payloaddataview = (TextArea) root.lookup("#payloaddataview");
                         payloaddataview.setWrapText(true);
-                        payloaddataview.appendText("\n"+deal.resultmap.get("攻击载荷："));
+                        if(deal.resultmap.get("攻击载荷：")!=null&&deal.resultmap.get("攻击载荷：")!=""){
+                            payloaddataview.appendText("\n" + dealString.decodeStr(deal.resultmap.get("攻击载荷：")));
+                            payloaddataview.appendText("\n" + "**********************************************************");
+                            payloaddataview.appendText("\n原payload:");
+                            payloaddataview.appendText("\n" + deal.resultmap.get("攻击载荷："));
+
+                        }
 
                         //获取basetextarea放入数据
                         TextArea basetataview = (TextArea) root.lookup("#basetataview");
                         basetataview.setWrapText(true);
-                        System.out.println(deal.head);
                         basetataview.appendText(deal.head);
                         for (String key : deal.resultmap.keySet()) {
                             String value = deal.resultmap.get(key);
                             //过滤掉空字段
-                            if(!match(value)){
-                                basetataview.appendText("\n"+key+value);
+                            if (!match(value)&&key!="攻击载荷：") {
+                                basetataview.appendText("\n" + key + value);
                             }
 
                         }
-
-
-
-
-
-
                         //监听窗口关闭，显示主界面。
-                        stringdeal.setOnCloseRequest(new EventHandler<WindowEvent>() {
-                            @Override
-                            public void handle(WindowEvent windowEvent) {
-                                primary.setIconified(false);
-                            }
-                        });
+                        stringdeal.setOnCloseRequest(windowEvent -> primary.setIconified(false));
                         stringhandleresult.setOnKeyPressed(event -> {
                             if (event.getCode() == KeyCode.ESCAPE) {
                                 stringdeal.close();

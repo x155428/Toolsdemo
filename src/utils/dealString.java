@@ -117,4 +117,30 @@ public class dealString {
         return resultmap;
     }
 
+    //处理payload,删除\00等，解码ascii
+    public static String decodeStr(String input){
+
+        System.out.println("Original string: " + input);
+
+        Pattern pattern = Pattern.compile("\\\\([0-9a-fA-F]{2})");
+        Matcher matcher = pattern.matcher(input);
+
+        StringBuilder outputBuilder = new StringBuilder();
+        while (matcher.find()) {
+            String hexString = matcher.group(1);
+            int asciiCode = Integer.parseInt(hexString, 16);
+            char asciiChar = (char) asciiCode;
+            if (asciiChar >= 0 && asciiChar <= 126) {
+                matcher.appendReplacement(outputBuilder, String.valueOf(asciiChar));
+            }
+            else{
+                matcher.appendReplacement(outputBuilder, "");
+            }
+        }
+        matcher.appendTail(outputBuilder);
+
+        String output = outputBuilder.toString();
+        return output;
+    }
+
 }

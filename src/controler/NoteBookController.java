@@ -70,6 +70,8 @@ public class NoteBookController {
         // 状态栏不可视
         label.setVisible(false);
 
+        ta.setWrapText(true);
+        WrapMenu.setSelected(true);
         ta.setOnMouseClicked(e -> {
             if (e.getButton() == MouseButton.PRIMARY) {
                 position = ta.getCaretPosition();
@@ -275,7 +277,7 @@ public class NoteBookController {
             String tfString = tf1.getText(); // 获取查找内容的字符串
             if (!tf1.getText().isEmpty()) {
                 if (textString.contains(tfString)) {
-                    if (startIndex == -1) {// not found
+                    if (startIndex == -1) {
                         Alert alert1 = new Alert(AlertType.WARNING);
                         alert1.titleProperty().set("提示");
                         alert1.headerTextProperty().set("已经找不到相关内容了！");
